@@ -1,0 +1,364 @@
+# Intermediate Python
+
+Programmer > Program
+
+## Elements vs Collections
+
+These values have physical representations on your computer as well. Booleans are represented by physical bits on your computer – using electromagnetism to encode the state. Numbers are represented by a sequence of bits, interpreted according to a set of mathematical rules. Text is represented as a a sequence of numbers, each corresponding to a character in the text. In essence, all digital information (not just booleans, numbers, and text, but everything – collections, images, audio) is represented as a sequence of bits that humans have collectively decided to interpret in a standard way. That is, even a seemingly-fundamental question of essence: "is this digital information a number or a piece of text?" comes down to human interpretation. It's too overwhelming to always think of all digital information as an enormously large sequence of bits, subject to several standard interpretations, so we'll build on useful abstractions, such as that of a number value of an element of text.
+
+
+- Can I know the size, or length, of this data? If so, the data is Sized.
+- Can I produce elements from this data set, one at a time? If so, the data is Iterable.
+- Can I check whether an element is in this data set? If so, the data is a Container.
+
+A Collection is data that answers "yes" for all of these questions.
+
+Not all collections encode data the same way. Experts further refine their query:
+
+Is the data ordered (sequential), or unordered?
+Is the data associative, mapping between keys and values?
+Is the data unique? --> sets have no duplicates
+The answers deeply affect how the data will be represented in programs. Depending on the answers, the data may be a Sequence, a Set, or a Mapping.
+
+
+Mutable vs Immutable (hashable):
+
+- a dataset with historical temperature values from 1990 vs a daily menu
+- str, tuple, list --> sequences, list only is mutable
+- sets --> are mutable sets
+- dictionary --> mutable mapping
+
+SEquence vs Mapping:
+A sequence is represents ordered data and has positional elements, whereas a map represents unordered data and has associated elements.
+
+
+
+Term	Definition
+Container	An object that holds elements of data.
+Iterable	An object that can produce a stream of elements of data.
+Mapping	An unordered collection associating elements of data (keys) to other elements of data (values).
+Mutable	A property of a data collection where the top-level collection can be changed.
+Schema	A representation or outline of a data model.
+Sequence	An ordered collection of data elements.
+Set	An unordered collection of unique data elements.
+Sized	An object that has a finite size.
+Structured Data	Information to which we assign meaning through organization.
+
+
+
+not True  # => False
+True and False  # => False
+True or False  # => True. Short-circuits and once it find something that is True (as that is the first value), then it stops and prints True already.
+
+
+There are a few other useful mathematical operators:
+
+7 // 3 # => 2 (int division)
+7 % 3  # => 1 (int modulus)
+3 ** 2 # => 9 (exponentiate)
+
+string escapes:
+"don't" or "don\'t"
+
+
+String methods@
+.find(), .replace(), .isalpha(),  strip('dH !') --> strips only of the specified charaacters instead of the spaces being default for strip()
+
+
+
+Note that str.strip removes any matching characters from the start or end of the string – to remove a substring as a prefix or a suffix, you can write your own function or use str.removeprefix or str.removesuffix introduced in Python 3.9.
+
+
+Truthiness
+The conversion of a value to a boolean gives the value an essence of "truthiness" – as a boolean, is this object True or False? Empty objects are "Falsy":
+
+# 'Falsy' values.
+bool(None)   # => False
+bool(False)  # => False
+bool(0)      # => False
+bool(0.0)    # => False
+bool('')     # => False
+
+# Empty data structures too!
+bool([])     # => False
+Other objects are "truthy":
+
+bool(41)     # => True
+bool('abc')  # => True
+bool(int)    # => True
+
+# Non-empty containers too!
+bool([False])  # => True
+
+
+Variables vs Pbjects
+
+varibale oppposite to object doesnt have a type, it;s only a label for an object with its type
+
+variable is a name associated to an object via a namespace
+
+
+namespaces are associations between anmes and objects, and variable assignements chagnes references but doesnt create new objects
+
+
+## Sequences
+
+The first category of collections we examine are sequences – sized, iterable ordered containers of data. We'll see the similarities and differences between three sequence types - list, tuple, and str.
+
+Slicing and step sizing:
+
+s= 'Udacity'
+
+The first and second lines can be replaced with s[:2] and s[4:] – Python infers the position of a missing value as either the start or end of the sequence.
+
+You can even pass a step size:
+
+s[1:5:2] == 'dc'
+s[4::-2] == 'iaU'
+This enables a concise, if obscure, technique for reversing a sequence: s[::-1] == 'yticadU' – the expression s[::-1] says "start where you're supposed to, end where you're supposed to, and takes steps of -1 through this sequence," which functionally reverses a sequence.
+
+
+get every other number in a list/sequence: 
+my_list[::2]"]
+get every other number in a list/sequence starting with index 1:
+my_list[1::2]"]
+
+### Lists
+There are a number of other methods on lists that are worth knowing about:
+
+# Extend list by appending elements from the iterable
+my_list.extend(iterable)
+
+# Insert object before index
+my_list.insert(index, object)
+
+# Remove first occurrence of value, or raise ValueError
+my_list.remove(value)
+
+# Remove all items
+my_list.clear()
+
+# Return number of occurrences of value
+my_list.count(value)
+
+# Return first index of value, or raise ValueError
+my_list.index(value, [start, [stop]])
+
+# Remove, return item at index (def. last) or IndexError
+my_list.pop([index])
+
+# Stable sort *in place*
+my_list.sort(key=None, reverse=False)
+
+# Reverse *in place*.
+my_list.reverse()
+
+
+Tuples:
+
+There are a few quirks when working with tuples:
+
+empty = ()
+len(empty)      # => 0
+
+singleton = ("value",)
+plain_string = "value"  # Note plain_string != singleton
+len(singleton)  # => 1
+
+# Tuples contain (immutable) references to underlying objects!
+v = ([1, 2, 3], ['a', 'b', 'c'])
+v[0].append(4)
+v  # => ([1, 2, 3, 4], ['a', 'b', 'c'])
+In the second case, the identity of the objects contained by the tuple didn't change – but the data contained within those objects was updated in-place, appending a 4 to the first list.
+
+Programming:
+
+Making a Cake
+Imagine that each of the quadrants are represented by some programmer steeped in that style of thinking. If asked to describe what it means to "make a cake," each might respond:
+
+Procedural Perry: "To start, preheat the oven to 425°F. Next, collect the ingredients. To do so, first acquire flour, sugar, cocoa powder, baking powder, and baking soda, as well as 2 eggs, water, and a stick of butter. Then, mix the dry ingredients in a bowl. Then, mix the wet ingredients in a bowl. Then, mix the wet ingredients into the dry ingredients. After, put the batter into a cake pan and insert the cake pan into the oven for 12 minutes. Finally, take the cake out of the oven and let it cool."
+Declarative Danna: "I'd like a 9"x9" round, fluffy, and chocolatey cake."
+Object-Oriented Omar: "To make a Cake, we need a Recipe, which is a set of Ingredients and a bunch of actions we can take on the ingredients. To begin, construct a collection of all required ingredients that will become Batter. To construct Batter, mix the wet ingredients together and the dry ingredients together, and mix them both together. Then, supply the Batter to an Oven that has been preheated, and ask the oven to bake the batter for 12 minutes. Finally, retrieve the (now-finished) cake from the Oven."
+Functional Fatima: "To turn ingredients into a cake, compose the transformation of ingredients into batter and batter into a cake. To turn ingredients into batter, transform wet ingredients into a wet mix and dry ingredients into a dry mix, and then transform both mixes into batter. To transform batter into a cake, pass it into and out of the oven."
+Multi-Paradigm You: "Each of these approaches to the problem has its benefits and drawbacks. I'll pick and choose features from each according to my personal style and the requirements of the cake. By studying all of these tactics, I'll become a better baker, more capable of adapting to new types of baked goods."
+
+FUNCTIONS AND SCOPES:
+Only function definitions define a new symbol table – if statements, for loops, while loops, and with statements do not introduce new symbol tables and a new scope.
+
+
+
+KWARGS:
+
+
+Variadic Keyword Argument Unpacking	A mechanism to unpack an mapping with the syntax mapping into keyword arguments supplied when a function is invoked.
+
+Variadic Keyword Parameter Collection	A category of parameter like kwargs that captures a variable number of excess keyword arguments in a dictionary.
+
+
+def authorize(quote, **speaker_info):
+    print(">", quote)
+    print("-" * (len(quote) + 2))
+    for key, value in speaker_info.items():
+        print(key, value, sep=': ')
+
+        OR
+
+ info = {
+    'sonnet': 18,
+    'line': 1,
+    'author': "Shakespeare"
+}
+authorize("Shall I compare thee to a summer's day", **info)  # Does the same thing as authorize("Shall I compare thee to a summer's day", sonnet=18, line=1, author='Shakespeare')
+
+
+FUNCTIONS 
+
+Fucntions are objects and have hidden attributes
+ such as f.__name__ or f.__doc__ 
+ We can also access info about functions by help(name_of_the_function)
+
+
+ youtube links on functions:
+ https://www.youtube.com/watch?v=7wwiM-oV0cs
+ https://www.youtube.com/watch?v=Q_kb00IjnNE
+
+ MAP:
+ https://www.youtube.com/watch?v=dgpK4GxDyJM&t=185s
+
+ FILTER:
+ https://www.youtube.com/watch?v=-paQ7fSGUhk&t=5s
+
+ application of map and filter: 
+ https://www.youtube.com/watch?v=5W1mQ1XniYY&t=2s
+
+ LAMBDA:
+ https://www.youtube.com/watch?v=L_Ygis69kDM&t=16s
+ advantages: 
+ inline, anonymous, doesn't take up space visually, nor in the namespace --> declutters the local anme space
+ Normally, they shouldn't been assigned to a variable/name. The whole purpose of lambdas is to be unnamed, one-off functions. By directly giving it a name within the same scope its defined  (like e.g. triple = lambda x: x * 3
+), you reduce the main benefits of lambdas. In this case, it would be better just to have a function defined
+
+def triple(x):
+    return x * 3
+
+
+
+# Practice with map
+
+# Fill out the rest of the map functions.
+# You can define additional functions if you need to.
+# (a) ["apple", "orange", "pear"] => (5, 6, 4)  (length)
+# (b) ["apple", "orange", "pear"] => ("APPLE", "ORANGE", "PEAR")  (uppercase)
+# (c) ["apple", "orange", "pear"] => ("elppa", "egnaro", "raep")  (reversed)
+# (d) ["apple", "orange", "pear"] => ("ap", "or", "pe")  (first two letters)
+
+def reverse(s):
+    return s[::-1]
+
+def first_two(s):
+    return s[:2]
+
+a = map(len, ["apple", "orange", "pear"])
+b = map(str.upper, ["apple", "orange", "pear"])
+c = map(reverse, ["apple", "orange", "pear"])  # Could also be with a lambda function.
+d = map(first_two, ["apple", "orange", "pear"])  # Could also be with a lambda function.
+
+
+# Practice with filter
+# Fill out the rest of the filter functions.
+# You can define additional functions if you need to.
+# (a) range(100) => (0, 3, 6, 9, ...)  (div by 3)
+# (b) range(100) => (0, 5, 10, 15, ...)  (div by 5)
+# (c) range(100) => (0, 15, 30, 45, ...)  (div by 15)
+# (d) range(100) => (1, 2, 4, 7, 8, 11, 13, 14)  (not div by 3 and not div by 5)
+
+a = filter(lambda x: x % 3 == 0, range(100))
+b = filter(lambda x: x % 5 == 0, range(100))
+c = filter(lambda x: x % 15 == 0, range(100))
+d = filter(lambda x: x % 3 != 0 and x % 5 != 0, range(100))
+
+
+ITERATORS:
+
+Iterators are fundamental to the language. The humble for loop is really using an iterator!
+
+for element in data:
+    process(data)
+
+# actually behaves like
+
+for element in iter(data):
+    process(element)
+Built-in functions can consume iterables:
+
+max(iterable)
+min(iterable)
+any(iterable)
+all(iterable)
+element in iterable
+Some built-in functions even produce iterables:
+
+range(stop)
+enumerate(iterable)
+zip(*iterables)
+map(fn, iterable)
+filter(pred, iterable)
+
+Iterators maintain some semblance of state:
+
+it = iter(range(100))
+66 in it
+next(it)  # => 67
+
+
+Tricky example: what is the difference between the two:
+
+nine_is_a_square_with_map = 9 in map(lambda x: x ** 2, range(1000000))
+nine_is_a_square_with_listcomp = 9 in [x ** 2 for x in range(1000000)]
+
+The first line, with map, produces an iterator that evaluates its arguments as needed. Since 9 is found relatively early on, it is faster than the second line, in which the whole array of squares is first computed. As far as aesthetics go - that's up to you :)
+
+list comprehensions are greedy and try to buffer the function result before even checking for the desired output
+
+in the geenrators, the function only runs as many times as it needs to give the result ( while list comprehensions compute all the elements
+
+generators, though have states. Once we check for example for the number 16 in my generator list, and we get a bool, so let's say True, then the geenrator keeps the state on the elemenet 16, and afterwards, when asking to print the list of the numbers., it will only print from the 16 on, to the end of the list (so will skip all the numbers listed before the number 16)
+
+
+Generator expressions are appropriate when you want data-on-demand, but you might not want to compute all of it at once in memory.
+
+
+GENERATOR FUNCTIONS
+-using yield-
+
+When called, a generator function returns a generator iterator that can produce subsequent values on demand by running the function until it encounters a yield statement, and then pausing. In this way, generators are an advanced way to describe a stream of data.
+
+To build a generator function, define a function containing the yield keyword. To use it, call the generator function to get a generator iterator, and iterator over it to your heart's content.
+
+def generate_ints(n):
+    for i in range(n):
+        yield i
+
+g = generate_ints(3)  # Doesn't start the function! Just sets up the iterator
+type(g)  # => <class 'generator'>
+
+next(g)  # => 0. Run until the next yield statement.
+next(g)  # => 1. Run until the next yield statement.
+next(g)  # => 2. Run until the next yield statement.
+next(g)  # raises StopIteration. Finished the function before finding another yield statement.
+This can be used to describe fancier streams of data, that aren't easily accomplished with built-ins or generator expressions:
+
+def generate_fibs():
+    a, b = 0, 1
+    while True:
+        a, b = b, a + b
+        yield a
+
+g = generate_fibs()
+next(g)  # => 1
+next(g)  # => 1
+next(g)  # => 2
+next(g)  # => 3
+next(g)  # => 5
+max(g)   # Don't run this line of code. What happens?
+
